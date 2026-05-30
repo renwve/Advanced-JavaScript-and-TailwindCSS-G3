@@ -1,49 +1,8 @@
 let activeTab = 'weight';
-/*      ─ ⊹ ⊱ ⊰ ⊹ ─
-DISTANCE CONVERSIONS
-─ ⊹ ⊱ ⊰ ⊹ ─      */
 
-let distanceConvert = document.getElementById("distanceConvert");
-
-if (distanceConvert) {
-    distanceConvert.onclick = function () {
-
-        let value = Number(document.getElementById("distanceInput").value);
-        let type = document.getElementById("distanceType").value;
-        let result;
-
-        if (type === "mi-km") {
-            result = value * 1.60934;
-        } else {
-            result = value * 0.621371;
-        }
-
-        document.getElementById("distanceResult").textContent = result;
-    };
-}
-
-/*         ─ ⊹ ⊱ ⊰ ⊹ ─
-TEMPERATURE CONVERSIONS
-─ ⊹ ⊱ ⊰ ⊹ ─         */
-
-let temperatureConvert = document.getElementById("temperatureConvert");
-
-if (temperatureConvert) {
-    temperatureConvert.onclick = function () {
-
-        let value = Number(document.getElementById("temperatureInput").value);
-        let type = document.getElementById("temperatureType").value;
-        let result;
-
-        if (type === "c-f") {
-            result = (value * 9 / 5) + 32;
-        } else {
-            result = (value - 32) * 5 / 9;
-        }
-
-        document.getElementById("temperatureResult").textContent = result;
-    };
-}
+/*    ─ ⊹ ⊱ ⊰ ⊹ ─
+    SWITCH TAB
+─    ⊹ ⊱ ⊰ ⊹ ─ */
 
 // This functions handles switching between the different tabs for the calculation(Weight, Distance, Temperature).
 //  * It resets the styling to every tab button back to inactive, then apply the active styling to the new tab according to tabName 
@@ -62,6 +21,10 @@ function switchTab(tabName){
             updateLabels();
         }
 
+/*    ─ ⊹ ⊱ ⊰ ⊹ ─
+    UPDATE TAB
+─    ⊹ ⊱ ⊰ ⊹ ─ */
+
 // Updates the form's input label text based on the current direction.
 // It reads the selected active tab and the chosen conversion direction, like Metric to Imperial. to display corresponding text to the user
 // for example, if the user is on temperture tab and have direction of Imperial to Metric, then will display "Enter Values (Fahrenheit to Celsius):"
@@ -78,4 +41,81 @@ function updateLabels(){
     label.innerText = labelsMatrix[activeTab][direction];
 }
 
+/* ─ ⊹ ⊱ ⊰ ⊹ ─
+  CONVERSIONS
+─ ⊹ ⊱ ⊰ ⊹ ─ */
 
+document.addEventListener("DOMContentLoaded", () => {
+    updateLabels();
+
+    document.getElementById("converter-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const input = document.getElementById("user-input").value;
+
+        // ── .✦  WEIGHT
+        // Makes the program able to convert mroe than one value.
+        const values = input
+            .split(/[\s,]+/)
+            .filter(v => v !== "")
+            .map(Number);
+
+        if (values.length === 0 || values.some(isNaN)) {
+            alert("Please enter valid numbers separated by commas or spaces.");
+            return;
+        }
+
+        const direction = document.getElementById("conversion-direction").value;
+        let results = [];
+
+        values.forEach(value => {
+
+            // ── .✦  WEIGHT
+            // This section handles all weight conversions entered by the user.
+            // The program checks whether the user wants to convert from metric
+            // units to imperial units or vice versa. Kilograms are converted
+            // to pounds by multiplying by 2.20462, while pounds are converted
+            // back to kilograms by dividing by the same conversion factor.
+
+            if (activeTab === "weight") {
+                if (direction === "metricToImperial") {
+                    results.push(`${value} kg = ${(value * 2.20462).toFixed(2)} lbs`);
+                } else {
+                    results.push(`${value} lbs = ${(value / 2.20462).toFixed(2)} kg`);
+                }
+            }
+
+            // ── .✦ DISTANCE CONVERSION
+            // This section performs distance conversions between kilometers
+            // and miles. The conversion direction selected by the user
+            // determines which formula will be used. Kilometers are converted
+            // to miles using a multiplication factor of 0.621371. Miles are
+            // converted back to kilometers by dividing by the same value.
+            if (activeTab === "distance") {
+                if (direction === "metricToImperial") {
+                    results.push(`${value} km = ${(value * 0.621371).toFixed(2)} miles`);
+                } else {
+                    results.push(`${value} miles = ${(value / 0.621371).toFixed(2)} km`);
+                }
+            }
+
+            // ── .✦  TEMPERATURE
+            // This section converts temperature values between Celsius
+            // and Fahrenheit. Unlike weight and distance conversions,
+            // temperature requires a formula that includes multiplication,
+            // division, and addition or subtraction. Celsius values are
+            // converted using (°C × 9/5) + 32, while Fahrenheit values are
+            // converted using (°F − 32) × 5/9.
+            if (activeTab === "temperature") {
+                if (direction === "metricToImperial") {
+                    results.push(`${value}°C = ${((value * 9 / 5) + 32).toFixed(2)}°F`);
+                } else {
+                    results.push(`${value}°F = ${((value - 32) * 5 / 9).toFixed(2)}°C`);
+                }
+            }
+        });
+
+        document.getElementById("result-text").innerHTML = results.join("<br>");
+        document.getElementById("result-box").classList.remove("hidden");
+    });
+});
