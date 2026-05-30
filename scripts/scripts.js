@@ -40,47 +40,71 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("converter-form").addEventListener("submit", function (e) {
         e.preventDefault();
 
-        const value = parseFloat(document.getElementById("user-input").value);
-        const direction = document.getElementById("conversion-direction").value;
+        const input = document.getElementById("user-input").value;
 
-        if (isNaN(value)) {
-            alert("Please enter a valid number.");
+        // ── .✦  WEIGHT
+        // Makes the program able to convert mroe than one value.
+        const values = input
+            .split(/[\s,]+/)
+            .filter(v => v !== "")
+            .map(Number);
+
+        if (values.length === 0 || values.some(isNaN)) {
+            alert("Please enter valid numbers separated by commas or spaces.");
             return;
         }
 
-        let result;
+        const direction = document.getElementById("conversion-direction").value;
+        let results = [];
 
-        // ── .✦  WEIGHT
+        values.forEach(value => {
 
-        if (activeTab === "weight") {
-            if (direction === "metricToImperial") {
-                result = `${value} kg = ${(value * 2.20462).toFixed(2)} lbs`;
-            } else {
-                result = `${value} lbs = ${(value / 2.20462).toFixed(2)} kg`;
+            // ── .✦  WEIGHT
+            // This section handles all weight conversions entered by the user.
+            // The program checks whether the user wants to convert from metric
+            // units to imperial units or vice versa. Kilograms are converted
+            // to pounds by multiplying by 2.20462, while pounds are converted
+            // back to kilograms by dividing by the same conversion factor.
+
+            if (activeTab === "weight") {
+                if (direction === "metricToImperial") {
+                    results.push(`${value} kg = ${(value * 2.20462).toFixed(2)} lbs`);
+                } else {
+                    results.push(`${value} lbs = ${(value / 2.20462).toFixed(2)} kg`);
+                }
             }
-        }
 
-        // ── .✦  DISTANCE
-
-        if (activeTab === "distance") {
-            if (direction === "metricToImperial") {
-                result = `${value} km = ${(value * 0.621371).toFixed(2)} miles`;
-            } else {
-                result = `${value} miles = ${(value / 0.621371).toFixed(2)} km`;
+            // ── .✦ DISTANCE CONVERSION
+            // This section performs distance conversions between kilometers
+            // and miles. The conversion direction selected by the user
+            // determines which formula will be used. Kilometers are converted
+            // to miles using a multiplication factor of 0.621371. Miles are
+            // converted back to kilometers by dividing by the same value.
+            if (activeTab === "distance") {
+                if (direction === "metricToImperial") {
+                    results.push(`${value} km = ${(value * 0.621371).toFixed(2)} miles`);
+                } else {
+                    results.push(`${value} miles = ${(value / 0.621371).toFixed(2)} km`);
+                }
             }
-        }
 
-        // ── .✦  TEMPERATURE
-
-        if (activeTab === "temperature") {
-            if (direction === "metricToImperial") {
-                result = `${value}°C = ${((value * 9 / 5) + 32).toFixed(2)}°F`;
-            } else {
-                result = `${value}°F = ${((value - 32) * 5 / 9).toFixed(2)}°C`;
+            // ── .✦  TEMPERATURE
+            // This section converts temperature values between Celsius
+            // and Fahrenheit. Unlike weight and distance conversions,
+            // temperature requires a formula that includes multiplication,
+            // division, and addition or subtraction. Celsius values are
+            // converted using (°C × 9/5) + 32, while Fahrenheit values are
+            // converted using (°F − 32) × 5/9.
+            if (activeTab === "temperature") {
+                if (direction === "metricToImperial") {
+                    results.push(`${value}°C = ${((value * 9 / 5) + 32).toFixed(2)}°F`);
+                } else {
+                    results.push(`${value}°F = ${((value - 32) * 5 / 9).toFixed(2)}°C`);
+                }
             }
-        }
+        });
 
-        document.getElementById("result-text").textContent = result;
+        document.getElementById("result-text").innerHTML = results.join("<br>");
         document.getElementById("result-box").classList.remove("hidden");
     });
 });
