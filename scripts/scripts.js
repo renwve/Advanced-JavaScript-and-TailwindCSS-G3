@@ -1,50 +1,8 @@
 let activeTab = 'weight';
-/*      ─ ⊹ ⊱ ⊰ ⊹ ─
-DISTANCE CONVERSIONS
-─ ⊹ ⊱ ⊰ ⊹ ─      */
 
-let distanceConvert = document.getElementById("distanceConvert");
-
-if (distanceConvert) {
-    distanceConvert.onclick = function () {
-
-        let value = Number(document.getElementById("distanceInput").value);
-        let type = document.getElementById("distanceType").value;
-        let result;
-
-        if (type === "mi-km") {
-            result = value * 1.60934;
-        } else {
-            result = value * 0.621371;
-        }
-
-        document.getElementById("distanceResult").textContent = result;
-    };
-}
-
-/*         ─ ⊹ ⊱ ⊰ ⊹ ─
-TEMPERATURE CONVERSIONS
-─ ⊹ ⊱ ⊰ ⊹ ─         */
-
-let temperatureConvert = document.getElementById("temperatureConvert");
-
-if (temperatureConvert) {
-    temperatureConvert.onclick = function () {
-
-        let value = Number(document.getElementById("temperatureInput").value);
-        let type = document.getElementById("temperatureType").value;
-        let result;
-
-        if (type === "c-f") {
-            result = (value * 9 / 5) + 32;
-        } else {
-            result = (value - 32) * 5 / 9;
-        }
-
-        document.getElementById("temperatureResult").textContent = result;
-    };
-}
-
+/*    ─ ⊹ ⊱ ⊰ ⊹ ─
+    SWITCH TAB
+─    ⊹ ⊱ ⊰ ⊹ ─ */
 
 function switchTab(tabName){
             activeTab = tabName;
@@ -72,4 +30,57 @@ function updateLabels(){
     label.innerText = labelsMatrix[activeTab][direction];
 }
 
+/* ─ ⊹ ⊱ ⊰ ⊹ ─
+  CONVERSIONS
+─ ⊹ ⊱ ⊰ ⊹ ─ */
 
+document.addEventListener("DOMContentLoaded", () => {
+    updateLabels();
+
+    document.getElementById("converter-form").addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const value = parseFloat(document.getElementById("user-input").value);
+        const direction = document.getElementById("conversion-direction").value;
+
+        if (isNaN(value)) {
+            alert("Please enter a valid number.");
+            return;
+        }
+
+        let result;
+
+        // ── .✦  WEIGHT
+
+        if (activeTab === "weight") {
+            if (direction === "metricToImperial") {
+                result = `${value} kg = ${(value * 2.20462).toFixed(2)} lbs`;
+            } else {
+                result = `${value} lbs = ${(value / 2.20462).toFixed(2)} kg`;
+            }
+        }
+
+        // ── .✦  DISTANCE
+
+        if (activeTab === "distance") {
+            if (direction === "metricToImperial") {
+                result = `${value} km = ${(value * 0.621371).toFixed(2)} miles`;
+            } else {
+                result = `${value} miles = ${(value / 0.621371).toFixed(2)} km`;
+            }
+        }
+
+        // ── .✦  TEMPERATURE
+
+        if (activeTab === "temperature") {
+            if (direction === "metricToImperial") {
+                result = `${value}°C = ${((value * 9 / 5) + 32).toFixed(2)}°F`;
+            } else {
+                result = `${value}°F = ${((value - 32) * 5 / 9).toFixed(2)}°C`;
+            }
+        }
+
+        document.getElementById("result-text").textContent = result;
+        document.getElementById("result-box").classList.remove("hidden");
+    });
+});
