@@ -1,25 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang = "en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset = "UTF-8">
+  <meta name = "viewport" content="width=device-width, initial-scale=1.0">
   <title>Unit Converter - Distance</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="scripts/scripts.js"></script>
+  <script src = "https://cdn.tailwindcss.com"></script>
 </head>
 <body id = "distance">
   <section id = "distanceSctn">
     <h2>Distance Converter</h2>
 
     <section id = "distanceData">
-      <input type = "text" id = "distanceInput" placeholder = "Enter value or array...">
+      <input type = "text" id = "distanceInput" placeholder = "Enter value...">
 
-      <select id="distanceType">
-        <option value="mi-km">Miles to Kilometres</option>
-        <option value="km-mi">Kilometres to Miles</option>
+      <select id = "distanceType">
+        <option value = "mi-km">Miles to Kilometres</option>
+        <option value = "km-mi">Kilometres to Miles</option>
       </select>
 
-      <button id="distanceConvert">Convert</button>
-      <p id="distanceResult"></p>
+      <button id = "distanceConvert">Convert</button>
+
+      <p id = "distanceResult"></p>
     </section>
 </body>
+<script src = "scripts/scripts.js"></script>
+</html>
